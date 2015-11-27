@@ -9,20 +9,22 @@ import (
 )
 
 var (
-	timeout   = time.Second * 120
-	keepAlive = time.Second * 120
+	timeout   = time.Second * 60
+	keepAlive = time.Second * 60
 )
 
-type dialerFn func(proto, addr string) (net.Conn, error)
-
-func NewLanternDialer(proxyAddr string, dial dialerFn) dialerFn {
+// NewLanternDialer creates the dialer function used by tunio to connect to
+// external sites.
+func NewLanternDialer(proxyAddr string, dial dialer) dialer {
 	if dial == nil {
+		// A simple transparent dialer.
 		d := net.Dialer{
 			Timeout:   timeout,
 			KeepAlive: keepAlive,
 		}
 		dial = d.Dial
 	}
+	// A CONNECT proxy dialer that works with a Lantern client.
 	return func(proto, addr string) (net.Conn, error) {
 		conn, err := dial("tcp", proxyAddr)
 		if err != nil {
@@ -49,6 +51,6 @@ func NewLanternDialer(proxyAddr string, dial dialerFn) dialerFn {
 			return conn, nil
 		}
 
-		return nil, errors.New("Could not connect to Lantern.")
+		return nil, errors.New("Could not CONNECT to Lantern proxy.")
 	}
 }
