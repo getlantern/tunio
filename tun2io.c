@@ -1179,4 +1179,17 @@ static void UdpGwClient_GotPacket(BAddr local_addr, BAddr remote_addr, int is_dn
   UdpGwClient_SendPacket(connId, remote_addr, flags, data, data_len);
 }
 
+// UdpGwClient_SendKeepalive sends a Keep Alive message.
+static void UdpGwClient_SendKeepalive(uint16_t connId) {
+  struct UdpGwClient__keepalive_packet keepalive_packet;
+  keepalive_packet.pp.len = sizeof(keepalive_packet.udpgw);
+  memset(&keepalive_packet.udpgw, 0, sizeof(keepalive_packet.udpgw));
+  keepalive_packet.udpgw.flags = UDPGW_CLIENT_FLAG_KEEPALIVE;
+
+  // Move the connection to the head of the list.
+  // goUdpGwClient_UnshiftConn(connId);
+
+  goUdpGwClient_Send(connId, (uint8_t *)&keepalive_packet, sizeof(keepalive_packet));
+}
+
 #endif

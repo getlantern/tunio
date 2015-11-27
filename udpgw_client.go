@@ -470,5 +470,9 @@ func goUdpGwClient_NewConnection(cLocalAddr C.BAddr, cRemoteAddr C.BAddr) C.uint
 	client.cLocalAddr = cLocalAddr
 	client.cRemoteAddr = cRemoteAddr
 
-	return C.uint16_t(connID)
+	cConnID := C.uint16_t(connID)
+
+	C.UdpGwClient_SendKeepalive(cConnID)
+
+	return cConnID
 }

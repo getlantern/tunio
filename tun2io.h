@@ -130,6 +130,11 @@ struct tcp_client {
   uint32_t tunnel_id;
 };
 
+struct UdpGwClient__keepalive_packet {
+  struct packetproto_header pp;
+  struct udpgw_header udpgw;
+} UdpGwClient__keepalive_packet;
+
 static void terminate (void);
 static BAddr baddr_from_lwip (int is_ipv6, const ipX_addr_t *ipx_addr, uint16_t port_hostorder);
 static void lwip_init_job_hadler (void *unused);
@@ -184,6 +189,7 @@ int goUdpGwClient_ConnIdExists(uint16_t cConnID);
 
 int goUdpGwClient_Configure(int mtu, int maxConnections, int bufferSize, int keepAliveTime);
 static void UdpGwClient_GotPacket(BAddr local_addr, BAddr remote_addr, int is_dns, const uint8_t *data, int data_len);
+static void UdpGwClient_SendKeepalive(uint16_t connId);
 
 static char *dump_dest_addr(struct tcp_client *client);
 
