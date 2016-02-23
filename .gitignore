@@ -1,1 +1,6 @@
 *.sw?
+.vagrant
+cmd/tunio/tunio
+lib/
+obj/
+*.o

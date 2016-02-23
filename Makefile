@@ -36,6 +36,10 @@ deps:
 		echo "-> $(OBJDIR)/$$o"; \
 	done
 
+binary: lib
+	go get -d && \
+	go install github.com/getlantern/tunio/cmd/tunio
+
 clean:
 	rm -f $(OBJDIR)/*.o
 	rm -f lib/*
